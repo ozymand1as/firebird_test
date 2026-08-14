@@ -2,6 +2,40 @@
 
 Native React Native app for iOS and Android that displays JSONPlaceholder posts, opens a post detail view, and lets a user maintain a local favorites list. It uses TypeScript, React Navigation, Zustand, AsyncStorage, and FakerJS; it does not use Expo.
 
+## One-command macOS/iOS installation
+
+For a fresh, buildable iOS checkout on macOS, run the repository-root installer from the directory that should contain the project:
+
+```sh
+/path/to/install.sh [destination]
+```
+
+The installer always clones the fixed public source, `https://github.com/ozymand1as/firebird_test.git`; GitHub SSH access is not required. With no destination it installs into `./firebird_test`, resolved from the directory where you invoke it. For example, this creates a space-containing destination relative to the current directory:
+
+```sh
+/path/to/install.sh "Firebird Posts review"
+```
+
+Before running it, have macOS with Git, Node.js 22.11.0 or later, npm, Ruby 2.6.10 or later, Bundler, Xcode command-line tools/Xcode, and network access available. The installer does not install or upgrade any of those host prerequisites.
+
+For safety, the destination must not already exist: an existing directory, file, or symbolic link is refused and never changed. After preflight, the installer clones the repository, runs lockfile-governed `npm ci` and `bundle install`, installs Pods through the Gemfile-managed CocoaPods command, and builds the `FirebirdPosts` iOS scheme for a Simulator-compatible target. It does not start Metro, boot a Simulator, or launch the app.
+
+Only after a successful installation and build, start Metro from the installed project in one terminal. The commands below are for the default `./firebird_test` destination:
+
+```sh
+cd ./firebird_test
+npm run start
+```
+
+Then, in another terminal from that same default project directory, launch iOS:
+
+```sh
+cd ./firebird_test
+npm run ios
+```
+
+Keep Metro running in the first terminal. For an explicit destination, use the safely quoted `cd` command containing the resolved absolute project path printed by the installer in both terminals, rather than `cd ./firebird_test`. If a stage fails, the installer reports the failure and retains any partial new destination for inspection; choose a new destination, or deliberately remove that partial directory yourself before retrying. The manual Android/iOS setup, quality commands, limitations, and evidence remain documented below.
+
 ## Normal setup and Metro launch
 
 Prerequisites:

@@ -344,3 +344,61 @@ This ordered sequence remediates the React Native 0.87 / Gesture Handler native 
   - **Call-count/cache adjudication:** the temporary DEBUG overlay directly captured the clean first list/detail acquisition and zero redundant API/Faker/miss/commit values after revisit/restart. Hydrated Zustand state can validly bypass repository `ensure*`, so a repository-hit counter is not required when visible cached data is restored with zero redundant work; the passing automated suite additionally covers mocked per-ID in-flight deduplication and cache behavior.
   - **Temporary instrumentation cleanup:** the IOS-18A instrumentation was JavaScript-only, used solely for the documented development evidence, and has been removed from shipped source (no `FIREBIRD_EVIDENCE`, runtime-overlay component, or runtime ledger remains). The cleaned source passed the final automated checks above; no temporary instrumentation remains to ship.
   - **Changed/generated inventory:** `package.json`, `package-lock.json`, `Gemfile.lock`, `ios/Podfile.lock`, generated `ios/Pods/`, generated `ios/FirebirdPosts.xcworkspace/`, and this handoff record in `docs/sdd/tasks.md`. The workspace has no Git metadata (`git status --short` reports “not a git repository”), so a Git diff/status inventory is unavailable. IOS-20 is complete under its evidence-handoff pass condition; IOS-18 and IOS-18A are complete with the direct QA and cache evidence recorded above.
+
+## Installer delivery checklist (addendum)
+
+- [x] **INS-01 — Inspect repository contracts and preserve current work**
+  - **Owner:** Implementer
+  - **Files owned:** no source changes; use `git status --short`, `package.json`, `package-lock.json`, `Gemfile`, `Gemfile.lock`, `ios/Podfile`, and the existing iOS workspace/scheme only for read-only confirmation.
+  - **Dependencies:** none.
+  - **Work:** Confirm the lockfiles and native project names expected by the specification before writing the installer. Record pre-existing dirty files and do not alter application, Android, lockfile, generated native, Simulator, or Metro state as part of this feature.
+  - **Acceptance checks:** the implementation target is limited to new root `install.sh`, its executable mode, and the installer README section; all pre-existing unrelated edits remain intact.
+
+- [x] **INS-02 — Implement the root POSIX installer interface and safe preflight**
+  - **Owner:** Implementer
+  - **Files owned:** `install.sh` (new; executable mode must be committed).
+  - **Dependencies:** INS-01.
+  - **Work:** Implement `/bin/sh` with `set -eu`, a concise `install.sh [destination]` usage function, and `-h`/`--help` success handling. Refuse more than one destination with nonzero status. Capture the invocation directory before any `cd`; resolve no-argument destination as `./firebird_test` from that directory and resolve a relative explicit destination against it. Use quoted paths throughout and support ordinary spaces. Before changing the destination, verify Darwin, `git`, `node`, `npm`, `ruby`, `bundle`, `xcode-select`, and `xcodebuild`; compare Node >= 22.11.0 and Ruby >= 2.6.10; require successful `xcode-select -p` and `xcodebuild -version`; give each failure a concise remediation hint. Reject existing files, directories, and symlinks (including dangling symlinks) before clone, validate a writable nearest existing parent, and create only safely validated missing parents.
+  - **Acceptance checks:** every preflight/safety error is nonzero, names the missing/invalid condition, makes no clone or destination content change, and uses neither `sudo`, host-tool installation, shell-profile editing, destructive cleanup, nor simulator/Metro commands.
+
+- [x] **INS-03 — Implement locked setup, non-launching build, and failure reporting**
+  - **Owner:** Implementer
+  - **Files owned:** `install.sh`.
+  - **Dependencies:** INS-02.
+  - **Work:** Add sequential named stages: clone `https://github.com/ozymand1as/firebird_test.git`; confirm committed `package-lock.json`, `Gemfile`, `Gemfile.lock`, and `ios/Podfile`; run `npm ci`; run `bundle install`; run `bundle exec pod install --project-directory=ios`; then build `FirebirdPosts` from `ios/FirebirdPosts.xcworkspace` with `xcodebuild`, Debug, `iphonesimulator`, and `generic/platform=iOS Simulator`. Preserve each failing command's diagnostics, stop later stages, return nonzero, and report the retained partial destination without deleting it. On success only, print an unmistakable success line, absolute project path, safely quoted `cd` command, exact `npm run start` and `npm run ios` commands, and two-terminal guidance.
+  - **Acceptance checks:** dependency commands are lockfile-governed and use Bundler for Pods; build has no `simctl`, `npm run ios`, Metro, app-launch, boot, erase, or selected-device action; interruption/failure never prints the success footer or removes a partial checkout.
+
+- [x] **INS-04 — Add installer-first README guidance**
+  - **Owner:** Implementer
+  - **Files owned:** `README.md`.
+  - **Dependencies:** INS-03.
+  - **Work:** Insert a prominent `One-command macOS/iOS installation` section near the beginning, before existing manual setup. State the macOS/iOS focus; required preinstalled Git, Node 22.11.0+, npm, Ruby 2.6.10+, Bundler, Xcode command-line tools/Xcode, and network; and that the installer does not install/upgrade host tools. Include the fixed public HTTPS clone source, exact syntax, default `./firebird_test`, a quoted explicit-destination example, existing-destination refusal, locked installs/pod setup/non-launching build behavior, two-terminal post-install Metro/iOS commands, and partial-destination retry guidance. Retain links or access to all existing manual Android/iOS, quality, limitations, and evidence information.
+  - **Acceptance checks:** docs do not claim an unverified build succeeded or that the installer provisions host prerequisites, starts Metro, or launches a Simulator.
+
+- [x] **INS-05 — Run static and interface checks**
+  - **Owner:** Tester
+  - **Files owned:** no production edits; a validation record only if the repository has an established evidence location.
+  - **Dependencies:** INS-03, INS-04.
+  - **Verify:** Run `sh -n ./install.sh` and verify `test -x ./install.sh`. Inspect the script for the canonical HTTPS URL, `npm ci`, `bundle install`, `bundle exec pod install --project-directory=ios`, and the required workspace/scheme simulator-compatible `xcodebuild` invocation. Confirm absence of `sudo`, global `pod`, simulator commands, `npm run start`, `npm run ios`, Metro process start, and delete/cleanup behavior. From outside the checkout, verify `--help` exits zero and invalid argument count is nonzero with usage.
+  - **Evidence:** retain commands/output and any discrepancy; do not use a running Simulator or modify app state.
+
+- [x] **INS-06 — Run destination and preflight negative validation**
+  - **Owner:** Tester
+  - **Files owned:** no production edits; temporary directories only.
+  - **Dependencies:** INS-05.
+  - **Verify:** In a newly created `mktemp -d` directory outside the development checkout, invoke the installer by absolute path against a pre-created nonempty destination holding a sentinel file; assert nonzero exit and byte-for-byte unchanged sentinel. Also cover an existing file or symlink target where practical. Invoke under a deliberately constrained `PATH` (or controlled command shim) to simulate one missing prerequisite; assert a specific nonzero preflight error occurs before target/parent creation. Clean only the temporary validation directory when safe; never clean any checkout or use Simulator controls.
+  - **Evidence:** capture exit codes, output, sentinel comparison, and confirmation that the preflight-failure target is absent.
+
+- [x] **INS-07 — Validate a fresh isolated installation and build**
+  - **Owner:** Tester
+  - **Files owned:** no repository production edits; temporary clone, normal tool caches, and captured logs only.
+  - **Dependencies:** INS-06 and host prerequisites/network/disk capacity available.
+  - **Verify:** From a newly created `mktemp -d` directory outside this checkout, run the source installer via its absolute path using a unique explicit fresh destination (use a space-containing name when environment capacity permits). Capture full terminal output and exit status. Verify cloned `origin` uses the canonical public HTTPS URL; `node_modules`, Bundler-managed dependencies, `ios/Pods`, and `ios/FirebirdPosts.xcworkspace` exist; retained output proves all locked stages and the non-launching `xcodebuild` completed. In the installed clone run `git status --short` and confirm tracked source and lockfiles are unchanged. Confirm success output contains absolute destination, `npm run start`, `npm run ios`, and two-terminal instructions. Confirm the installer neither starts Metro nor issues any Simulator command.
+  - **Evidence:** report either the complete successful transcript/status/postconditions or the exact environmental blocker (network, registry, RubyGems, pod source, Xcode, disk) and failing stage. Do not weaken the requirement or claim success if this end-to-end run cannot complete.
+
+- [x] **INS-08 — Final installer review and handoff**
+  - **Owner:** Tester
+  - **Files owned:** documentation/evidence record only when appropriate; no application changes.
+  - **Dependencies:** INS-07 (or its explicitly documented environment limitation).
+  - **Verify:** Review acceptance criteria 1–14 against implementation and validation evidence. Reconfirm repository working tree changes are limited to intended installer/docs/SDD work and that no developer checkout, app installation, Metro process, or Simulator state was changed by the validation flow.
+  - **Evidence:** give a concise pass/fail matrix that distinguishes implementation defects from environment limitations and lists the retained partial directory, if any.

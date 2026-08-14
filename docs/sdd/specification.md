@@ -260,3 +260,7 @@ The final GitHub repository must include or clearly link to:
 - Any known limitations that prevent an acceptance criterion from being met.
 
 Repository traceability for these deliverables is maintained in [the root README](../../README.md) and [the AI-work evidence manifest](../ai-evidence/README.md). The manifest distinguishes present artifacts from delivery gaps; it must not be read as proof that pending validation or missing chat evidence is complete.
+
+## 12. Installer Traceability Addendum
+
+The root-level `install.sh` is a reviewer convenience for a fresh macOS/iOS checkout; it does not change the product requirements, application architecture, or the historical iOS verification record above. It accepts zero or one destination, refuses any existing destination (including files and symlinks), clones the canonical public HTTPS repository, and uses `npm ci`, Bundler-managed CocoaPods, and a simulator-compatible `FirebirdPosts` build. It preflights the documented host tooling and never installs host software, starts Metro, or launches/controls a Simulator. A failed stage leaves only the newly cloned partial destination for inspection; the README remains the user-facing installation and manual-platform reference.
