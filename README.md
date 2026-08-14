@@ -1,19 +1,19 @@
 # Firebird Posts
 
+```sh
+curl -fsSL "https://raw.githubusercontent.com/ozymand1as/firebird_test/main/install.sh" | bash
+```
+
 Native React Native app for iOS and Android that displays JSONPlaceholder posts, opens a post detail view, and lets a user maintain a local favorites list. It uses TypeScript, React Navigation, Zustand, AsyncStorage, and FakerJS; it does not use Expo.
 
 ## One-command macOS/iOS installation
 
-For a fresh, buildable iOS checkout on macOS, run the repository-root installer from the directory that should contain the project:
+For a fresh, buildable iOS checkout on macOS, run the command above from the directory that should contain the project. It downloads the installer directly from this repository and executes it with Bash; no preliminary clone is needed.
+
+The installer always clones the fixed public source, `https://github.com/ozymand1as/firebird_test.git`; GitHub SSH access is not required. With no destination it installs into `./firebird_test`, resolved from the directory where you invoke it. To choose another destination while using the pipe form, pass arguments to Bash after `-s --`. For example:
 
 ```sh
-/path/to/install.sh [destination]
-```
-
-The installer always clones the fixed public source, `https://github.com/ozymand1as/firebird_test.git`; GitHub SSH access is not required. With no destination it installs into `./firebird_test`, resolved from the directory where you invoke it. For example, this creates a space-containing destination relative to the current directory:
-
-```sh
-/path/to/install.sh "Firebird Posts review"
+curl -fsSL "https://raw.githubusercontent.com/ozymand1as/firebird_test/main/install.sh" | bash -s -- "Firebird Posts review"
 ```
 
 Before running it, have macOS with Git, Node.js 22.11.0 or later, npm, Ruby 2.6.10 or later, Bundler, Xcode command-line tools/Xcode, and network access available. The installer does not install or upgrade any of those host prerequisites.

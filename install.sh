@@ -9,6 +9,7 @@ clone_started=0
 
 usage() {
   printf '%s\n' 'Usage: install.sh [destination]'
+  printf '%s\n' '       curl -fsSL "https://raw.githubusercontent.com/ozymand1as/firebird_test/main/install.sh" | bash'
   printf '%s\n' 'Install a fresh Firebird Posts checkout into destination (default: ./firebird_test).'
 }
 
