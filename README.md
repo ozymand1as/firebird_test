@@ -13,7 +13,7 @@ For a fresh, buildable iOS checkout on macOS, run the command above from the dir
 The installer always clones the fixed public source, `https://github.com/ozymand1as/firebird_test.git`; GitHub SSH access is not required. With no destination it installs into `./firebird_test`, resolved from the directory where you invoke it. To choose another destination while using the pipe form, pass arguments to Bash after `-s --`. For example:
 
 ```sh
-curl -fsSL "https://raw.githubusercontent.com/ozymand1as/firebird_test/main/install.sh" | bash -s -- "Firebird Posts review"
+curl -fsSL "https://raw.githubusercontent.com/ozymand1as/firebird_test/main/install.sh" | bash -s -- "Firebird_Posts_review"
 ```
 
 Before running it, have macOS with Git, Node.js 22.11.0 or later, npm, Ruby 2.6.10 or later, Bundler, Xcode command-line tools/Xcode, and network access available. The installer does not install or upgrade any of those host prerequisites.
