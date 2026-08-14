@@ -210,9 +210,5 @@ xcodebuild \
 
 printf '\n%s\n' 'Installation successful.'
 printf 'Installed project: %s\n' "$destination"
-printf '%s\n' 'To run the app later:'
-printf "  cd '%s'\n" "$(shell_quote "$destination")"
-printf '%s\n' '  npm run start'
-printf '%s\n' 'Then, in another terminal from that same project directory:'
-printf '%s\n' '  npm run ios'
-printf '%s\n' 'Keep Metro running in the first terminal while running the iOS command in the second.'
+printf '%s\n' 'Run the app with this single command (the React Native runner starts Metro when needed):'
+printf "cd '%s' && npm run ios\n" "$(shell_quote "$destination")"

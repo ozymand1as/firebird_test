@@ -20,21 +20,13 @@ Before running it, have macOS with Git, Node.js 22.11.0 or later, npm, Ruby 2.6.
 
 For safety, the destination must not already exist: an existing directory, file, or symbolic link is refused and never changed. After preflight, the installer clones the repository, runs lockfile-governed `npm ci` and `bundle install`, installs Pods through the Gemfile-managed CocoaPods command, and builds the `FirebirdPosts` iOS scheme for a Simulator-compatible target. It does not start Metro, boot a Simulator, or launch the app.
 
-Only after a successful installation and build, start Metro from the installed project in one terminal. The commands below are for the default `./firebird_test` destination:
+After a successful installation and build, run the app with one command. For the default `./firebird_test` destination:
 
 ```sh
-cd ./firebird_test
-npm run start
+cd ./firebird_test && npm run ios
 ```
 
-Then, in another terminal from that same default project directory, launch iOS:
-
-```sh
-cd ./firebird_test
-npm run ios
-```
-
-Keep Metro running in the first terminal. For an explicit destination, use the safely quoted `cd` command containing the resolved absolute project path printed by the installer in both terminals, rather than `cd ./firebird_test`. If a stage fails, the installer reports the failure and retains any partial new destination for inspection; choose a new destination, or deliberately remove that partial directory yourself before retrying. The manual Android/iOS setup, quality commands, limitations, and evidence remain documented below.
+The React Native iOS runner starts Metro automatically when needed. The installer prints this combined command as its final output using the resolved absolute installation path, including safe quoting for spaces and apostrophes. If a stage fails, the installer reports the failure and retains any partial new destination for inspection; choose a new destination, or deliberately remove that partial directory yourself before retrying. The manual Android/iOS setup, quality commands, limitations, and evidence remain documented below.
 
 ## Normal setup and Metro launch
 
